@@ -1,0 +1,22 @@
+{
+    "name": "chic-event",
+    "version": "0.0.0",
+
+    "description": "Chic Event is simple object-oriented event system for JavaScript",
+    "keywords": [ "event", "oop" ],
+    "author": "Rowan Manning (http://rowanmanning.co.uk/)",
+    "license": "MIT",
+
+    "repo": "rowanmanning/chic-event",
+    "homepage": "https://github.com/rowanmanning/chic-event",
+    "bugs": "https://github.com/rowanmanning/chic-event/issues",
+
+    "dependencies": {
+        "rowanmanning/chic": "*"
+    },
+
+    "main": "lib/chic-event.js",
+    "scripts": [
+        "lib/chic-event.js"
+    ]
+}
