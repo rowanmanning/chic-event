@@ -52,7 +52,164 @@ var EventEmitter = chic.event.EventEmitter;
 
 The rest of the examples assume you've got the `Event` and `EventEmitter` variables already.
 
-Todo...
+Chic Event's classes are build with Chic. [Read the documentation][chic] to familiarise yourself with the API.
+
+
+### EventEmitter
+
+The `EventEmitter` class is best used by extending it. Doing so will give your new classes the ability to handle and emit events. `EventEmitter` has an `extend` static method; you can create your own class like this:
+
+```js
+var Animal = EventEmitter.extend({
+    init: function () { ... }
+});
+var fluffy = new Animal();
+```
+
+Once you have a class, you'll be able to use the following methods:
+
+
+### EventEmitter.on()
+
+Bind a handler to an event type. This accepts two arguments:  
+**type:** *(string)* The type of event to bind to.  
+**handler:** *(function)* What to call when this type of event is emitted.
+
+```js
+fluffy.on('eat', function () { ... });
+```
+
+
+### EventEmitter.emit()
+
+Emit an event. This accepts two arguments:  
+**type:** *(string)* The type of event to emit.  
+**event:** *([Event](#event)|mixed)* The event object to pass to all handlers, or data with which to construct an event object.
+
+The following examples are equivalent:
+
+```js
+var event = new Event({food: 'steak'});
+fluffy.emit('eat', event);
+```
+
+```js
+fluffy.emit('eat', {food: 'steak'});
+```
+
+Each of the handlers bound to the given event type will be called with the [`Event`](#event) object as their first argument:
+
+```js
+fluffy.on('eat', function (event) {
+    if (event.data.food !== 'steak') {
+        return 'Fluffy sicked up his ' + event.data.food;
+    }
+});
+fluffy.emit('eat', {food: 'carrots'}); // Fluffy sicked up his carrots
+```
+
+
+### EventEmitter.off()
+
+Remove a specific handler from an event type. This accepts two arguments:  
+**type:** *(string)* The type of event to remove the handler from.  
+**handler:** *(function)* The handler to remove.
+
+```js
+function onEat () { ... }
+fluffy.on('eat', onEat); // bind a handler
+fluffy.off('eat', onEat); // then remove it
+```
+
+Remove all handlers from an event type. This accepts one argument:  
+**type:** *(string)* The type of event to remove the handlers from.
+
+```js
+fluffy.on('eat', function () { ... }); // bind handlers
+fluffy.on('eat', function () { ... });
+fluffy.off('eat'); // then remove them
+```
+
+Remove all handlers from all event types. Call with no arguments.
+
+```js
+fluffy.on('eat', function () { ... }); // bind handlers
+fluffy.on('poop', function () { ... });
+fluffy.off(); // then remove them
+```
+
+
+### Event
+
+The `Event` class is used to hold event data and allow handlers to stop events, preventing further handlers from executing.
+
+
+### Event.type
+
+This property contains the type of the event. It defaults to `null` and is set when passed into [`EventEmitter.emit`](#eventemitteremit):
+
+```js
+var event = new Event();
+fluffy.emit('eat', event);
+event.type; // eat
+```
+
+
+### Event.target
+
+This property contains the [`EventEmitter`](#eventemitter) instance which triggered the event. It defaults to `null` and is set when passed into [`EventEmitter.emit`](#eventemitteremit):
+
+```js
+var event = new Event();
+fluffy.emit('eat', event);
+event.target === fluffy; // true
+```
+
+
+### Event.data
+
+This property contains the arbitrary event data which can be passed in during construction:
+
+```js
+var event = new Event({food: 'steak'});
+event.data.food; // steak
+```
+
+If [`EventEmitter.emit`](#eventemitteremit) is called with anything other than an `Event` instance, then a new `Event` is created with the data passed into the constructor:
+
+```js
+fluffy.on('eat', function (event) {
+    event.data.food; // steak
+});
+fluffy.emit('eat', {food: 'steak'});
+```
+
+
+### Event.stop()
+
+Event handlers are executed in the order they are added. This method allows a handler to prevent execution of any other handlers later in the stack:
+
+```js
+fluffy.on('eat', function (event) {
+    event.stop();
+});
+fluffy.on('eat', function (event) {
+    // never called
+});
+fluffy.emit('eat');
+```
+
+
+### Event.stopped()
+
+This method returns whether the `Event` instance has been stopped with [`Event.stop`](#eventstop):
+
+```js
+var event = new Event();
+event.stopped(); // false
+event.stop();
+event.stopped(); // true
+```
 
 
 Development
