@@ -1,6 +1,6 @@
 {
     "name": "chic-event",
-    "version": "0.0.0",
+    "version": "0.0.1",
 
     "description": "Chic Event is simple object-oriented event system for JavaScript",
     "keywords": [ "event", "oop" ],

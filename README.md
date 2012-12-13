@@ -4,7 +4,7 @@ Chic Event (Beta)
 
 Chic Event is simple object-oriented event system for JavaScript. It's built on top of [Chic][chic].
 
-**Current Version:** *0.0.0*  
+**Current Version:** *0.0.1*  
 **Automated Build Status:** [![Build Status][travis-status]][travis]  
 **Node Support:** *0.6, 0.8*  
 **Browser Support:** *Untested, coming soon*
