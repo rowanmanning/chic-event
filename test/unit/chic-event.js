@@ -47,6 +47,18 @@
                 assert.isFunction(instance.stop);
             });
 
+            test('instance should have a type property (null by default)', function () {
+                assert.isNull(instance.type);
+            });
+
+            test('instance should have a target property (null by default)', function () {
+                assert.isNull(instance.target);
+            });
+
+            test('instance should have a data property (null by default)', function () {
+                assert.isNull(instance.data);
+            });
+
             test('stopped method should return false if stop has not been called', function () {
                 assert.isFalse(instance.stopped());
             });
@@ -54,6 +66,20 @@
             test('stopped method should return true if stop has been called', function () {
                 instance.stop();
                 assert.isTrue(instance.stopped());
+            });
+
+            suite('with data passed into constructor:', function () {
+                var data;
+
+                setup(function () {
+                    data = {foo: 'bar'};
+                    instance = new Event(data);
+                });
+
+                test('data property should be set to the value passed in', function () {
+                    assert.strictEqual(instance.data, data);
+                });
+
             });
 
         });
@@ -142,17 +168,30 @@
                     assert.strictEqual(foo2.firstCall.args[0], event);
                 });
 
-                test('handlers should be passed an event object even when emit is called with no event object', function () {
+                test('handlers should be passed an event object even when emit is called with a non event object', function () {
                     instance.emit('foo');
                     assert.instanceOf(foo.firstCall.args[0], Event);
                     assert.instanceOf(foo2.firstCall.args[0], Event);
                     assert.strictEqual(foo2.firstCall.args[0], foo.firstCall.args[0]);
                 });
 
+                test('event.data should be set to the passed in value when emit is called with a non event object', function () {
+                    var data = [1, 2, 3];
+                    instance.emit('foo', data);
+                    assert.strictEqual(foo.firstCall.args[0].data, data);
+                    assert.strictEqual(foo2.firstCall.args[0].data, data);
+                });
+
                 test('the event type property should be set to the type of event being emitted', function () {
                     var event = new Event();
                     instance.emit('foo', event);
                     assert.strictEqual(event.type, 'foo');
+                });
+
+                test('the event target property should be set to the instance emitting the event', function () {
+                    var event = new Event();
+                    instance.emit('foo', event);
+                    assert.strictEqual(event.target, instance);
                 });
 
                 test('a handler which stops the event should prevent other handlers from being called', function () {
@@ -199,12 +238,6 @@
                     assert.throws(function () {
                         instance.emit(123);
                     }, /^Type must be a string$/);
-                });
-
-                test('emit method should throw when called with a defined, non-Event event argument', function () {
-                    assert.throws(function () {
-                        instance.emit('foo', 123);
-                    }, /^Event must be an Event object or undefined$/);
                 });
 
             });
