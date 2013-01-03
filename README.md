@@ -251,5 +251,5 @@ Chic Event is licensed under the [MIT][mit] license.
 [component]: https://github.com/component/component
 [mit]: http://opensource.org/licenses/mit-license.php
 [node]: http://nodejs.org/
-[travis]: https://secure.travis-ci.org/rowanmanning/chic-event
-[travis-status]: https://secure.travis-ci.org/rowanmanning/chic-event.png?branch=master
+[travis]: https://travis-ci.org/rowanmanning/chic-event
+[travis-status]: https://travis-ci.org/rowanmanning/chic-event.png?branch=master
